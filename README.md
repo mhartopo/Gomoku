@@ -1,0 +1,2 @@
+## Gomoku
+Multiplayer game Gomoku
