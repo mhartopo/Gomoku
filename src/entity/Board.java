@@ -82,14 +82,31 @@ public class Board {
 		}
 		return S;
 	}
+	
 	public String getRightDiagonal(int row, int col) {
 		String S = "";
+		int cons = col + row;
+		int r = 0;
+		
+		for(int c = cons; c < size; c--) {
+			S += Integer.toString(boardElmt[r][c]);
+			r++;
+		}
 		return S; 
 	}
+	
 	public String getLeftDiagonal(int row, int col) {
 		String S = "";
+		int cons = row - col;
+		int r = 0;
+		for(int c = cons; c < size; c++) {
+			S += Integer.toString(boardElmt[r][c]);
+			r++;
+		}
+		
 		return S; 
 	}
+	
 	//inner class point
 	public class Point {
 		private  int x;
