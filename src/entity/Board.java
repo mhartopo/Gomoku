@@ -16,7 +16,7 @@ public class Board {
 		lastMove = new Point(-1,-1);
 	}
 	public boolean setElmt(int id, int row, int col) {
-		if(boardElmt[col][col] != 0) {
+		if(boardElmt[row][col] != 0) {
 			return false;
 		} else {
 			boardElmt[row][col] = id;
