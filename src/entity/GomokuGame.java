@@ -14,7 +14,7 @@ public class GomokuGame {
 		lastMove = 0;
 	}
 	
-	public void AddPlayer(String name, String address) {
+	public void addPlayer(String name, String address) {
 		numPlayer++;
 		Player p = new Player(numPlayer, name, address);
 		players.add(p);
@@ -24,10 +24,18 @@ public class GomokuGame {
 	public void makeMove(Player p, int row, int col) {
 		board.setElmt(p.getId(), row, col);
 	}
-	
+	public void makeMove(int id, int row, int col) {
+		board.setElmt(id, row, col);
+	}
 	public int nextTurn() {
 		int idTurn;
 		idTurn = (lastMove % numPlayer) + 1;
 		return idTurn;
+	}
+	
+	public void play() {
+		while(board.getWinner() < 0) {
+			
+		}
 	}
 }

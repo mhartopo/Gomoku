@@ -10,13 +10,13 @@ public class Board {
 		//inisialisasi tabel
 		for(int i = 0; i < 20; i++) {
 			for(int j =0; j < 20; j++) {
-				boardElmt[i][j] = 0;
+				boardElmt[i][j] = -1;
 			}
 		}
 		lastMove = new Point(-1,-1);
 	}
 	public boolean setElmt(int id, int row, int col) {
-		if(boardElmt[row][col] != 0) {
+		if(boardElmt[row][col] != -1) {
 			return false;
 		} else {
 			boardElmt[row][col] = id;
@@ -39,7 +39,7 @@ public class Board {
 	}
 	public int checkWin() {
 		if(lastMove.isEqual(-1,-1)) {
-			return -1;
+			return -2;
 		} else {
 			int lastID = boardElmt[lastMove.x][lastMove.y];
 			String pattern = "";
@@ -105,6 +105,14 @@ public class Board {
 		}
 		
 		return S; 
+	}
+	public void print() {
+		for(int i = 0; i < size; i++) {
+			for(int j = 0; j < size; j++) {
+				System.out.print(boardElmt[i][j]);
+			}
+			System.out.println("\n");
+		}
 	}
 	
 	//inner class point
