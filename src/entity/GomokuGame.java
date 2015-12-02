@@ -11,7 +11,7 @@ public class GomokuGame {
 		board = new Board();
 		players = new ArrayList<Player>();
 		numPlayer = 0;
-		lastMove = 0;
+		lastMove = -1;
 	}
 	
 	public void addPlayer(String name, String address) {
@@ -32,10 +32,11 @@ public class GomokuGame {
 		idTurn = (lastMove % numPlayer) + 1;
 		return idTurn;
 	}
-	
+	public void clear() {
+		board.clear();
+		lastMove = -1;
+	}
 	public void play() {
-		while(board.getWinner() < 0) {
-			
-		}
+		
 	}
 }

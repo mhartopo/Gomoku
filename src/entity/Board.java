@@ -27,9 +27,7 @@ public class Board {
 	public int getElmt(int i, int j) {
 		return boardElmt[i][j];
 	}
-	public int getWinner() {
-		return 0;
-	}
+	
 	public Point getLastMove() {
 		return lastMove;
 	}
@@ -47,22 +45,22 @@ public class Board {
 				pattern += Integer.toString(lastID);
 			}
 			String S = getRow(lastMove.x);
-			if(S.matches("(.*)"+pattern+"(*.)")) {
+			if(S.matches("(.*)"+pattern+"(.*)")) {
 				return lastID;
 			}
 			S = getCol(lastMove.y);
-			if(S.matches("(.*)"+pattern+"(*.)")) {
+			if(S.matches("(.*)"+pattern+"(.*)")) {
 				return lastID;
 			}
 			S = getLeftDiagonal(lastMove.x, lastMove.y);
-			if(S.matches("(.*)"+pattern+"(*.)")) {
+			if(S.matches("(.*)"+pattern+"(.*)")) {
 				return lastID;
 			}
 			S = getRightDiagonal(lastMove.x, lastMove.y);
-			if(S.matches("(.*)"+pattern+"(*.)")) {
+			if(S.matches("(.*)"+pattern+"(.*)")) {
 				return lastID;
 			} else {
-				return 0;
+				return -1;
 			}
 		}
 		
@@ -88,7 +86,7 @@ public class Board {
 		int cons = col + row;
 		int r = 0;
 		
-		for(int c = cons; c < size; c--) {
+		for(int c = cons; c > 0; c--) {
 			S += Integer.toString(boardElmt[r][c]);
 			r++;
 		}
@@ -97,7 +95,7 @@ public class Board {
 	
 	public String getLeftDiagonal(int row, int col) {
 		String S = "";
-		int cons = row - col;
+		int cons = Math.abs(row - col);
 		int r = 0;
 		for(int c = cons; c < size; c++) {
 			S += Integer.toString(boardElmt[r][c]);
@@ -105,6 +103,15 @@ public class Board {
 		}
 		
 		return S; 
+	}
+	
+	public void clear() {
+		for(int i = 0; i < size; i++) {
+			for(int j =0; j < size; j++) {
+				boardElmt[i][j] = -1;
+			}
+		}
+		lastMove = new Point(-1,-1);
 	}
 	public void print() {
 		for(int i = 0; i < size; i++) {
