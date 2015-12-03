@@ -6,19 +6,19 @@ public class GomokuGame {
 	private Board board;
 	private ArrayList<Player> players;
 	private int numPlayer;
-	private int lastMove;
+	private int nextMove;
 	public GomokuGame() {
 		board = new Board();
 		players = new ArrayList<Player>();
 		numPlayer = 0;
-		lastMove = -1;
+		nextMove = -1;
 	}
 	
 	public void addPlayer(String name, String address) {
 		numPlayer++;
 		Player p = new Player(numPlayer, name, address);
 		players.add(p);
-		lastMove = p.getId();
+		nextMove = nextTurn();
 	}
 	
 	public void makeMove(Player p, int row, int col) {
@@ -29,12 +29,12 @@ public class GomokuGame {
 	}
 	public int nextTurn() {
 		int idTurn;
-		idTurn = (lastMove % numPlayer) + 1;
+		idTurn = (nextMove+1) % numPlayer;
 		return idTurn;
 	}
 	public void clear() {
 		board.clear();
-		lastMove = -1;
+		nextMove = -1;
 	}
 	public void play() {
 		
