@@ -2,12 +2,15 @@ package gui;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class panelButton extends JButton implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public int x_pos;
 	public int y_pos;
 	private int player;
