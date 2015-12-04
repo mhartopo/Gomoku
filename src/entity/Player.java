@@ -1,5 +1,8 @@
 package entity;
-
+/**
+ * @author Muhtar H
+ * 13513068
+ * */
 public class Player {
 	private int id;
 	private String name;

@@ -1,5 +1,8 @@
 package entity;
-
+/**
+ * @author Muhtar H
+ * 13513068
+ * */
 public class Board {
 	private int[][] boardElmt;
 	private Point lastMove;
@@ -84,22 +87,40 @@ public class Board {
 	public String getRightDiagonal(int row, int col) {
 		String S = "";
 		int cons = col + row;
-		int r = 0;
-		
-		for(int c = cons; c > 0; c--) {
-			S += Integer.toString(boardElmt[r][c]);
-			r++;
+		if(cons >= size) {
+			int c = size-1;
+			int r;
+			for(r = cons - c; r < size; r++) {
+				S += Integer.toString(boardElmt[r][c]);
+				c--;
+			}
+		} else {
+			int r = 0;
+			for(int c = cons; c > 0; c--) {
+				S += Integer.toString(boardElmt[r][c]);
+				r++;
+			}
 		}
 		return S; 
 	}
 	
 	public String getLeftDiagonal(int row, int col) {
 		String S = "";
+		int r;
 		int cons = Math.abs(row - col);
-		int r = 0;
-		for(int c = cons; c < size; c++) {
-			S += Integer.toString(boardElmt[r][c]);
-			r++;
+		if((row - col) > 0) {
+			r = row - col;
+			int c = 0;
+			for(r = row-col; r  < size; r++) {
+				S += Integer.toString(boardElmt[r][c]);
+				c++;
+			}
+		} else {
+			r = 0;
+			for(int c = cons; c < size; c++) {
+				S += Integer.toString(boardElmt[r][c]);
+				r++;
+			}
 		}
 		
 		return S; 

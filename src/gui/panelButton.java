@@ -1,7 +1,11 @@
 package gui;
-
-import javax.swing.ImageIcon;
+/**
+ * @author Faisal Prabowo
+ * 13513096
+ * */
 import javax.swing.JButton;
+import entity.GomokuGame;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,34 +18,44 @@ public class panelButton extends JButton implements ActionListener{
 	public int x_pos;
 	public int y_pos;
 	private int player;
-	private ImageIcon a,b,c,d,f;
-	
-	public panelButton(){
+	private GomokuGame game;
+	private boolean click;
+	public panelButton(GomokuGame g){
 		x_pos = 0;
 		y_pos = 0;
 		player = 0;
+		game = g;
+		click = false;
 		this.addActionListener(this);
-		a = new ImageIcon(this.getClass().getResource("black.png"));
-		b = new ImageIcon(this.getClass().getResource("blue.png"));
-		c = new ImageIcon(this.getClass().getResource("red.png"));
-		d = new ImageIcon(this.getClass().getResource("green.png"));
-		f = new ImageIcon(this.getClass().getResource("yellow.png"));
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println(x_pos+" "+y_pos);
+		if(click == false && game.checkWin() < 0 && game.getPalyers().size() > 0) {
+			player = game.getTurn();
+			game.makeMove(game.getTurn(), x_pos, y_pos);
+			click = true;
+			paint();
+			
+			if(game.checkWin() >= 0) {
+				UI.lblGiiliran.setText(game.getPalyers().get(game.checkWin()).getName() + " menang !");
+			} else {
+				UI.lblGiiliran.setText("Giliran "+game.getPalyers().get(game.getTurn()).getName());
+			}
+		}
+	}
+	public void paint() {
 		switch(player){
-    	case 1  : setIcon(a);
+    	case 0  : setBackground(Color.blue);
     			break;
-    	case 2  : setIcon(b);
+    	case 1  : setBackground(Color.green);
     			break;
-    	case 3  : setIcon(c);
+    	case 2  : setBackground(Color.red);
     			break;
-    	case 4  : setIcon(d);
+    	case 3  : setBackground(Color.yellow);
     			break;
-    	case 5  : setIcon(f);
+    	case 4  : setBackground(Color.black);
     			break;
     	default : setIcon(null);; break; 
 		}
@@ -71,6 +85,8 @@ public class panelButton extends JButton implements ActionListener{
 		this.player = player;
 	}
 	
-	
+	public boolean isClicked(){
+		return click;
+	}
 	
 }
