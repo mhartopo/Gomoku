@@ -18,6 +18,14 @@ public class Board {
 		}
 		lastMove = new Point(-1,-1);
 	}
+	public void setBoard(int[][] b) {
+		for(int i =0 ; i < boardElmt.length; i++) {
+			for(int j = 0; j < boardElmt.length; j++) {
+				boardElmt[i][j] = b[i][j];
+			}
+		}
+	}
+	
 	public boolean setElmt(int id, int row, int col) {
 		if(boardElmt[row][col] != -1) {
 			return false;
@@ -72,14 +80,22 @@ public class Board {
 	public String getRow(int row) {
 		String S = "";
 		for(int j = 0; j < size; j++) {
-			S += Integer.toString(boardElmt[row][j]);
+			if(boardElmt[row][j] == -1) {
+				S += "-";
+			}else {
+				S += Integer.toString(boardElmt[row][j]);
+			}
 		}
 		return S;
 	}
 	public String getCol(int col) {
 		String S = "";
 		for(int i = 0; i < size; i++) {
-			S += Integer.toString(boardElmt[i][col]);
+			if(boardElmt[i][col] == -1) {
+				S += "-";
+			}else {
+				S += Integer.toString(boardElmt[i][col]);
+			}
 		}
 		return S;
 	}
@@ -91,13 +107,21 @@ public class Board {
 			int c = size-1;
 			int r;
 			for(r = cons - c; r < size; r++) {
-				S += Integer.toString(boardElmt[r][c]);
+				if(boardElmt[r][c] == -1) {
+					S += "-";
+				}else {
+					S += Integer.toString(boardElmt[r][c]);
+				}
 				c--;
 			}
 		} else {
 			int r = 0;
 			for(int c = cons; c > 0; c--) {
-				S += Integer.toString(boardElmt[r][c]);
+				if(boardElmt[r][c] == -1) {
+					S += "-";
+				}else {
+					S += Integer.toString(boardElmt[r][c]);
+				}
 				r++;
 			}
 		}
@@ -112,13 +136,21 @@ public class Board {
 			r = row - col;
 			int c = 0;
 			for(r = row-col; r  < size; r++) {
-				S += Integer.toString(boardElmt[r][c]);
+				if(boardElmt[r][c] == -1) {
+					S += "-";
+				} else {
+					S += Integer.toString(boardElmt[r][c]);
+				}
 				c++;
 			}
 		} else {
 			r = 0;
 			for(int c = cons; c < size; c++) {
-				S += Integer.toString(boardElmt[r][c]);
+				if(boardElmt[r][c] == -1) {
+					S += "-";
+				} else {
+					S += Integer.toString(boardElmt[r][c]);
+				}
 				r++;
 			}
 		}
@@ -141,6 +173,9 @@ public class Board {
 			}
 			System.out.println("\n");
 		}
+	}
+	public int getSize() {
+		return size;
 	}
 	
 	//inner class point
@@ -174,5 +209,7 @@ public class Board {
 			return y >= 0 && x >= 0;
 		}
 	}
+	
+	
 
 }

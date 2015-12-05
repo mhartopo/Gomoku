@@ -12,6 +12,9 @@ import java.awt.GridLayout;
 import javax.swing.JLayeredPane;
 import javax.swing.JLabel;
 
+import network.Serv;
+import network.Server;
+
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 import entity.GomokuGame;
@@ -23,18 +26,24 @@ import java.awt.event.MouseEvent;
 import java.awt.TextField;
 import java.awt.Button;
 import java.awt.Label;
+import java.io.IOException;
+import java.net.ServerSocket;
 
-public class UI {
+public class UI{
 
-	private JFrame frmGomoku;
+	private static final int PORT = 9001;
+	public JFrame frmGomoku;
 	private Button button;
-	private panelButton buttons[][] = new panelButton[20][20];
+	public static panelButton buttons[][] = new panelButton[20][20];
 	private JLayeredPane layeredPane_1;
-	private GomokuGame game = new GomokuGame();
+	public static GomokuGame game = new GomokuGame();
 	private JLayeredPane layeredPane = new JLayeredPane();
 	TextField textField_1;
 	TextField textField;
+	static Server servHandler;
+	public static ServerSocket listener = null;
 	public static JLabel lblGiiliran;
+	public static int servID;
 	/**
 	 * Launch the application.
 	 */
@@ -44,6 +53,8 @@ public class UI {
 				try {
 					UI window = new UI();
 					window.frmGomoku.setVisible(true);
+					Serv s = new Serv(listener,game);
+					s.start();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -54,22 +65,23 @@ public class UI {
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
 	 */
-	public UI() {
+	public UI() throws IOException {
 		initialize();
 		UpdateEvent();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws IOException 
 	 */
-	private void initialize() {
-		
+	private void initialize() throws IOException {
 		frmGomoku = new JFrame();
 		frmGomoku.setTitle("GOMOKU");
 		frmGomoku.setBounds(150, 20, 1000, 670);
 		frmGomoku.setResizable(false);
-		frmGomoku.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmGomoku.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmGomoku.getContentPane().add(layeredPane);
 		
 		setLayeredPane();
@@ -104,6 +116,8 @@ public class UI {
 		lblGiiliran.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblGiiliran.setBounds(689, 162, 257, 22);
 		layeredPane.add(lblGiiliran);
+		
+		listener = new ServerSocket(PORT);
 	}
 	
 	public void UpdateEvent() {
@@ -117,11 +131,12 @@ public class UI {
 					game.addPlayer(name, addr);
 					textField.setText("");
 					textField_1.setText("");
-					if(game.getPalyers().size() >= 5) {
+					if(game.getPalyers().size() == 1) {
+						lblGiiliran.setText("Giliran "+game.getPalyers().get(game.getTurn()).getName());
 						textField.setEnabled(false);
 						textField_1.setEnabled(false);
-					}else if(game.getPalyers().size() == 1) {
-						lblGiiliran.setText("Giliran "+game.getPalyers().get(game.getTurn()).getName());
+						button.setEnabled(false);
+						servID = 0;
 					}
 				}
 			}
@@ -144,5 +159,7 @@ public class UI {
 		}
 		
 		layeredPane.add(layeredPane_1);
-	} 
+	}
+
+	
 }

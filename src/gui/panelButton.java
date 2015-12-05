@@ -4,7 +4,12 @@ package gui;
  * 13513096
  * */
 import javax.swing.JButton;
+
+import network.Message;
+import network.Sender;
+import network.Server;
 import entity.GomokuGame;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,16 +37,24 @@ public class panelButton extends JButton implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		Sender sd = new Sender(Server.writers);
 		if(click == false && game.checkWin() < 0 && game.getPalyers().size() > 0) {
 			player = game.getTurn();
-			game.makeMove(game.getTurn(), x_pos, y_pos);
+			if(game.getTurn() == UI.servID) {
+				game.makeMove(game.getTurn(), x_pos, y_pos);
+			}
 			click = true;
 			paint();
-			
 			if(game.checkWin() >= 0) {
 				UI.lblGiiliran.setText(game.getPalyers().get(game.checkWin()).getName() + " menang !");
+				Message m = new Message(2,game.checkWin());
+				sd.sendBoardcast(m.toString());
 			} else {
 				UI.lblGiiliran.setText("Giliran "+game.getPalyers().get(game.getTurn()).getName());
+				Message m = new Message(0,player,x_pos,y_pos);
+				sd.sendBoardcast(m.toString());
+				Message m2 = new Message(1,game.getTurn());
+				sd.sendBoardcast(m2.toString());
 			}
 		}
 	}

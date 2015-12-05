@@ -51,5 +51,32 @@ public class GomokuGame {
 	public void play() {
 		
 	}
+	public String getBoardState() {
+		String S = "";
+		for(int i = 0; i < board.getSize(); i++) {
+			for(int j = 0; j < board.getSize(); j++) {
+				S += Integer.toString(board.getElmt(i, j)) + ",";
+			}
+			S += "-/";
+		}
+		return S+"-";
+	}
+	public String getPlayerStr() {
+		String S = "";
+		for(Player p : players) {
+			S += p.getName() + ",";
+		}
+		S += "-";
+		return S;
+	}
+	
+	public void setPlayers(ArrayList<Player> lp) {
+		players.clear();
+		players = lp;
+		numPlayer = lp.size();
+	}
+	public void setBoard(int[][] b) {
+		board.setBoard(b);
+	}
 	
 }

@@ -3,7 +3,7 @@ package network;
  * @author Muhtar H
  * */
 public class Message {
-	private int type; //tipe pesan
+	private int type; //tipe pesan untuk bergerak type = 0. pemain selanjutnya = 1. Untuk status kemenangan = 2.
 	private int userId; //id user
 	private int posX; //posisi X, jika kosong nilainya -1
 	private int posY; //posisi Y, jika kosong nilainya -1
@@ -58,5 +58,20 @@ public class Message {
 		S += Integer.toString(posY) + ",";
 		S += content;
 		return S;
+	}
+	public int getType() {
+		return type;
+	}
+	public int getuserID() {
+		return userId;
+	}
+	public int getX() {
+		return posX;
+	}
+	public int getY() {
+		return posY;
+	}
+	public String getContent() {
+		return content;
 	}
 }
