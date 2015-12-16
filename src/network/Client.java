@@ -1,65 +1,127 @@
 package network;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
+
+import java.util.ArrayList;
+
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+
+import entity.GomokuGame;
+import entity.Parser;
+import entity.Player;
+import gui.ClientUI;
 
 public class Client {
-    public static void main(String[] args) throws IOException {
+	 BufferedReader in;
+	    public static PrintWriter out;
+	    JFrame frame = new JFrame("Client");
+	    JTextField textField = new JTextField(40);
+	    JTextArea messageArea = new JTextArea(8, 40);
+		private Socket socket;
+		private GomokuGame game;
+		public static boolean myTurn = false;
+		public static int myID = -99;
+	    public Client(GomokuGame game) {
+	        // Layout GUI
+	    	this.game = game;
+	        textField.setEditable(false);
+	        messageArea.setEditable(false);
+	        frame.getContentPane().add(textField, "North");
+	        frame.getContentPane().add(new JScrollPane(messageArea), "Center");
+	        frame.pack();
 
-        String serverHostname = new String ("127.0.0.1");
-
-        if (args.length > 0)
-           serverHostname = args[0];
-        System.out.println ("Attemping to connect to host " +
-                serverHostname + " on port 10008.");
-
-        Socket echoSocket = null;
-        PrintWriter out = null;
-        BufferedReader in = null;
-
-        try {
-            echoSocket = new Socket(serverHostname, 10008);
-            out = new PrintWriter(echoSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(
-                                        echoSocket.getInputStream()));
-        } catch (UnknownHostException e) {
-            System.err.println("Don't know about host: " + serverHostname);
-            System.exit(1);
-        } catch (IOException e) {
-            System.err.println("Couldn't get I/O for "
-                               + "the connection to: " + serverHostname);
-            System.exit(1);
-        }
-
-	BufferedReader stdIn = new BufferedReader(
-                                   new InputStreamReader(System.in));
-	BufferedReader msgIn = new BufferedReader(
-			new InputStreamReader( echoSocket.getInputStream())
-			);
-	String userInput, msgInput = null;
-
-        System.out.println ("Type Message (\"Bye.\" to quit)");
-	while (((userInput = stdIn.readLine()) != null) || ((msgInput = msgIn.readLine()) != null)) 
-           {
-	    out.println(userInput);
-
-            // end loop
-	    if (msgInput != null){
-	    	System.out.println("Server : "+msgInput);
+	        // Add Listeners
+	        textField.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	                out.println(textField.getText());
+	                textField.setText("");
+	            }
+	        });
 	    }
-	    if (userInput.equals("Bye."))
-                break;
+	    private String getServerAddress() {
+	        return JOptionPane.showInputDialog(
+	            frame,
+	            "Enter IP Address of the Server:",
+	            "Welcome to the Chatter",
+	            JOptionPane.QUESTION_MESSAGE);
+	    }
+	    private String getName() {
+	        return JOptionPane.showInputDialog(
+	            frame,
+	            "Choose a screen name:",
+	            "Screen name selection",
+	            JOptionPane.PLAIN_MESSAGE);
+	    }
+	    public void run() throws IOException {
+	        // Make connection and initialize streams
+	        String serverAddress = getServerAddress();
+	        socket = new Socket(serverAddress, 9001);
+	        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	        out = new PrintWriter(socket.getOutputStream(), true);
+	        // Process all messages from server, according to the protocol.
+	        Parser parser = new Parser();
+	        while (true) {
+	            String line = in.readLine();
+	            if (line.startsWith("SUBMITNAME")) {
+	            	out.println(getName());
+	            } else if (line.startsWith("NAMEACCEPTED")){
+	            	textField.setEditable(true);
+	            } else if (line.startsWith("MESSAGE")) {
+	                messageArea.append(line.substring(8) + "\n");
+	            } else if(line.startsWith("PLAYERS")){
+	            	String players = line.substring(8);
+	            	ArrayList<Player> lp = parser.parsePlayers(players);
+	            	game.setPlayers(lp);
+	            } else if(line.startsWith("BOARD")) {
+	            	String S = line.substring(6);
+	            	int[][] b = parser.parseBoard(S);
+	            	game.setBoard(b);
+	            	for(int i = 0; i < b.length; i++) {
+	            		for(int j = 0; j < b.length; j++) {
+	            			if(b[i][j] != -1) {
+	            				ClientUI.buttons[i][j].setPlayer(b[i][j]);
+	            				ClientUI.buttons[i][j].paint();
+	            			}		
+	            		}
+	            	}
+	            }else if(line.startsWith("ID")){
+	            	String S = line.substring(3);
+	            	myID = Integer.parseInt(S);
+	            	System.out.println(myID);
+	            } else {
+	            	Message m = new Message(line);
+	            	if(m.getType() == 0) {
+	            		game.makeMove(m.getuserID(),m.getX(), m.getY());
+	            		ClientUI.buttons[m.getX()][m.getY()].setPlayer(m.getuserID());
+        				ClientUI.buttons[m.getX()][m.getY()].paint();
+	            	} else if(m.getType() == 1) {
+	            		myTurn = myID == m.getuserID();
+	            		ClientUI.lblGiiliran.setText("Giliran "+ game.getPalyers().get(m.getuserID()).getName());
+	            	} else if(m.getType() == 2) {
+	            		ClientUI.lblGiiliran.setText(game.getPalyers().get(m.getuserID()).getName() + " menang!");
+	            	}
+	            }
+	            messageArea.append(line+"\n");
+	            
+	        }
+	    }
+	    public static void main(String[] args) throws Exception {
+	        Client client = new Client(ClientUI.game);
+	        client.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        client.frame.setVisible(true);
+	        client.run();
+	    }
 
-	    System.out.println("echo: " + in.readLine());
-	   }
-
-	out.close();
-	in.close();
-	stdIn.close();
-	echoSocket.close();
-    }
 }

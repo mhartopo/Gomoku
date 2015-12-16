@@ -5,9 +5,9 @@ package gui;
  * */
 import javax.swing.JButton;
 
+import network.Client;
 import network.Message;
 import network.Sender;
-import network.Server;
 import entity.GomokuGame;
 
 import java.awt.Color;
@@ -15,7 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class panelButton extends JButton implements ActionListener{
+public class ClientPanel extends JButton implements ActionListener{
 	/**
 	 * 
 	 */
@@ -25,7 +25,7 @@ public class panelButton extends JButton implements ActionListener{
 	private int player;
 	private GomokuGame game;
 	private boolean click;
-	public panelButton(GomokuGame g){
+	public ClientPanel(GomokuGame g){
 		x_pos = 0;
 		y_pos = 0;
 		player = 0;
@@ -37,28 +37,15 @@ public class panelButton extends JButton implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		Sender sd = new Sender(Server.writers);
-		if(click == false && game.checkWin() < 0 && game.getPalyers().size() > 0) {
-			player = game.getTurn();
-			if(game.getTurn() == UI.myID) {
-				game.makeMove(game.getTurn(), x_pos, y_pos);
-				paint();
-				click = true;
-				Message m = new Message(0,player,x_pos,y_pos);
-				sd.sendBoardcast(m.toString());
-			}
-			
-			if(game.checkWin() >= 0) {
-				UI.lblGiiliran.setText(game.getPalyers().get(game.checkWin()).getName() + " menang !");
-				Message m = new Message(2,game.checkWin());
-				sd.sendBoardcast(m.toString());
-			} else {
+			if(Client.myTurn) {
+				game.makeMove(Client.myID, x_pos, y_pos);
+				player = Client.myID;
 				
-				UI.lblGiiliran.setText("Giliran "+game.getPalyers().get(game.getTurn()).getName());
-				Message m2 = new Message(1,game.getTurn());
-				sd.sendBoardcast(m2.toString());
-				
-			}
+				Message m = new Message(0,Client.myID,x_pos,y_pos);
+				System.out.println(m);
+				Sender S = new Sender();
+				S.send(Client.out, m.toString());
+				Client.myTurn = false;		
 		}
 	}
 	public void paint() {
