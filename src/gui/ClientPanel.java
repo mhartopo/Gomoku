@@ -40,14 +40,9 @@ public class ClientPanel extends JButton implements ActionListener{
 			if(Client.myTurn) {
 				game.makeMove(Client.myID, x_pos, y_pos);
 				player = Client.myID;
-<<<<<<< HEAD
 				
 				Message m = new Message(0,Client.myID,x_pos,y_pos);
 				System.out.println(m);
-=======
-				paint();
-				Message m = new Message(1,Client.myID,x_pos,y_pos);
->>>>>>> origin/master
 				Sender S = new Sender();
 				S.send(Client.out, m.toString());
 				Client.myTurn = false;		
