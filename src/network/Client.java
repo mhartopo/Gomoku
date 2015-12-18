@@ -100,7 +100,10 @@ public class Client {
 	            	String S = line.substring(3);
 	            	myID = Integer.parseInt(S);
 	            	System.out.println(myID);
-	            } else {
+	            } else if(line.startsWith("ROOM")) {
+	            	String room = line.substring(5);
+	            	ClientUI.lblRoom.setText("Room : "+room);
+	            } else{
 	            	Message m = new Message(line);
 	            	if(m.getType() == 0) {
 	            		game.makeMove(m.getuserID(),m.getX(), m.getY());
@@ -111,6 +114,9 @@ public class Client {
 	            		ClientUI.lblGiiliran.setText("Giliran "+ game.getPalyers().get(m.getuserID()).getName());
 	            	} else if(m.getType() == 2) {
 	            		ClientUI.lblGiiliran.setText(game.getPalyers().get(m.getuserID()).getName() + " menang!");
+	            	} else if(m.getType() == 3) {
+	            		game.addPlayer(m.getContent());
+	            		ClientUI.lblGiiliran.setText("Player baru : "+m.getContent());
 	            	}
 	            }
 	            messageArea.append(line+"\n");

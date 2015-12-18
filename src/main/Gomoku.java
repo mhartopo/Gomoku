@@ -56,7 +56,7 @@ public class Gomoku {
 		JDesktopPane desktopPane = new JDesktopPane();
 		frame.getContentPane().add(desktopPane, BorderLayout.CENTER);
 		
-		JButton btnClient = new JButton("CLIENT");
+		JButton btnClient = new JButton("Join Room");
 		btnClient.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -76,7 +76,7 @@ public class Gomoku {
 		btnClient.setBounds(68, 104, 108, 45);
 		desktopPane.add(btnClient);
 		
-		JButton btnNewButton = new JButton("Server");
+		JButton btnNewButton = new JButton("Create Room");
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {

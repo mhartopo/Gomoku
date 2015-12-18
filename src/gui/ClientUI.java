@@ -20,23 +20,16 @@ import entity.GomokuGame;
 
 import java.awt.Font;
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.TextField;
-import java.awt.Button;
-import java.awt.Label;
 
 public class ClientUI {
 
 	public JFrame frmGomoku;
-	private Button button;
 	public static ClientPanel buttons[][] = new ClientPanel[20][20];
 	private JLayeredPane layeredPane_1;
 	public static GomokuGame game = new GomokuGame();
 	private JLayeredPane layeredPane = new JLayeredPane();
-	TextField textField_1;
-	TextField textField;
 	public static JLabel lblGiiliran;
+	public static JLabel lblRoom;
 	/**
 	 * Launch the application.
 	 */
@@ -80,52 +73,18 @@ public class ClientUI {
 		lblGomoku.setBounds(425, 11, 205, 38);
 		layeredPane.add(lblGomoku);
 		
-		textField = new TextField();
-		textField.setBounds(764, 27, 182, 22);
-		layeredPane.add(textField);
-		
-		textField_1 = new TextField();
-		textField_1.setBounds(764, 74, 182, 22);
-		layeredPane.add(textField_1);
-		
-		button = new Button("Tambah pemain");
-		button.setBackground(Color.WHITE);
-		
-		button.setBounds(764, 106, 105, 22);
-		layeredPane.add(button);
-		Label label = new Label("Nama");
-		label.setBounds(689, 27, 62, 22);
-		layeredPane.add(label);		
-		Label label_1 = new Label("Alamat");
-		label_1.setBounds(689, 74, 62, 22);
-		layeredPane.add(label_1);
-		
 		lblGiiliran = DefaultComponentFactory.getInstance().createLabel("");
 		lblGiiliran.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblGiiliran.setBounds(689, 162, 257, 22);
+		lblGiiliran.setBounds(689, 122, 257, 22);
 		layeredPane.add(lblGiiliran);
+		
+		lblRoom = DefaultComponentFactory.getInstance().createLabel("");
+		lblRoom.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblRoom.setBounds(689, 70, 257, 22);
+		layeredPane.add(lblRoom);
 	}
 	
 	public void UpdateEvent() {
-		//add new player
-		button.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				String name = textField.getText();
-				String addr = textField_1.getText();
-				if(name.compareTo("") != 0) {
-					game.addPlayer(name, addr);
-					textField.setText("");
-					textField_1.setText("");
-					if(game.getPalyers().size() >= 5) {
-						textField.setEnabled(false);
-						textField_1.setEnabled(false);
-					}else if(game.getPalyers().size() == 1) {
-						lblGiiliran.setText("Giliran "+game.getPalyers().get(game.getTurn()).getName());
-					}
-				}
-			}
-		});
 		
 	}
 

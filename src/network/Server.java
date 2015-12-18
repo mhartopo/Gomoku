@@ -41,8 +41,12 @@ public class Server extends Thread{
                 }
                 synchronized (names) {
                     if (!names.contains(name)) {
-                        names.put(game.getPalyers().size(), name);
-                        game.addPlayer(name, "Maros");
+                    	Sender sd2 = new Sender(writers);
+                        int size = game.getPalyers().size();
+                        Message newpl = new Message(3,size,name);
+                    	sd2.sendBoardcast(newpl.toString());
+                        names.put(size, name);
+                        game.addPlayer(name);
                         break;
                     }
                 }
@@ -53,7 +57,7 @@ public class Server extends Thread{
             out.println("ID "+ Integer.toString(game.getPalyers().size()-1));
             out.println("BOARD "+game.getBoardState());
             out.println("PLAYERS "+game.getPlayerStr());
-            
+            out.println("ROOM "+game.getRoomName());
             Sender sd = new Sender(writers);
             while (true) {
                 String input = in.readLine();
@@ -62,24 +66,27 @@ public class Server extends Thread{
                 }
                 //add action to input
                 Message m = new Message(input);
+                int win = -1;
                 if(m.getType() == 0) {
                 	game.makeMove(m.getuserID(), m.getX(), m.getY());
                 	UI.buttons[m.getX()][m.getY()].setPlayer(m.getuserID());
                 	UI.buttons[m.getX()][m.getY()].paint();
-                	int win = game.checkWin();
+                	win = game.checkWin();
                 	if(win >= 0) {
-                		UI.lblGiiliran.setText(game.getPalyers().get(win) + " menang !");
+                		UI.lblGiiliran.setText(game.getPalyers().get(win).getName() + " menang !");
                 		Message mes = new Message(2,game.checkWin());
         				sd.sendBoardcast(mes.toString());
                 	}
                 }
-                //cari pemain selanjutnya
-                Message m2 = new Message(1,game.getTurn());
-                System.out.print("giliran = ");
-                System.out.println(m2.toString());
-                //kirim ke client
-                sd.sendBoardcast(input);
-                sd.sendBoardcast(m2.toString());
+                if(win < 0) {
+                	//cari pemain selanjutnya
+                	Message m2 = new Message(1,game.getTurn());
+                	System.out.print("giliran = ");
+                	System.out.println(m2.toString());
+                	//kirim ke client
+                	sd.sendBoardcast(input);
+                	sd.sendBoardcast(m2.toString());
+                }
             }
         } catch (IOException e) {
             System.out.println(e);

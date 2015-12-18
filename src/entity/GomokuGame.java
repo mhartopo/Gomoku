@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class GomokuGame {
 	private Board board;
 	private ArrayList<Player> players;
+	private String roomName = "My Room";
 	private int numPlayer;
 	private int nextMove;
 	public GomokuGame() {
@@ -16,10 +17,18 @@ public class GomokuGame {
 		numPlayer = 0;
 		nextMove = 0;
 	}
+	public GomokuGame(String room) {
+		board = new Board();
+		players = new ArrayList<Player>();
+		numPlayer = 0;
+		nextMove = 0;
+		roomName = room;
+	}
 	
-	public void addPlayer(String name, String address) {
+	
+	public void addPlayer(String name) {
 		numPlayer++;
-		Player p = new Player(numPlayer, name, address);
+		Player p = new Player(numPlayer, name, true);
 		players.add(p);
 		
 	}
@@ -77,6 +86,14 @@ public class GomokuGame {
 	}
 	public void setBoard(int[][] b) {
 		board.setBoard(b);
+	}
+
+	public String getRoomName() {
+		return roomName;
+	}
+
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
 	}
 	
 }

@@ -19,7 +19,7 @@ public class Parser {
 		String val[] = S.split(",");
 		ArrayList<Player> lp = new ArrayList<Player>();
 		for(int i = 0; i < val.length-1; i++) {
-			lp.add(new Player(i, val[i],"-"));
+			lp.add(new Player(i, val[i],true));
 		}
 		return lp;
 	}

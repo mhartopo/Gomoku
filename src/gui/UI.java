@@ -23,6 +23,8 @@ import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.TextField;
 import java.awt.Button;
 import java.awt.Label;
@@ -45,6 +47,7 @@ public class UI{
 	public static JLabel lblGiiliran;
 	public static int servID;
 	public static int myID;
+	private JLabel lblRoom;
 	/**
 	 * Launch the application.
 	 */
@@ -83,6 +86,16 @@ public class UI{
 		frmGomoku.setBounds(150, 20, 1000, 670);
 		frmGomoku.setResizable(false);
 		frmGomoku.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmGomoku.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				try {
+					listener.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		frmGomoku.getContentPane().add(layeredPane);
 		setLayeredPane();	
 		JLabel lblGomoku = DefaultComponentFactory.getInstance().createTitle("G . O . M . O . K . U");
@@ -98,7 +111,7 @@ public class UI{
 		textField_1.setBounds(764, 74, 182, 22);
 		layeredPane.add(textField_1);
 		
-		button = new Button("Tambah pemain");
+		button = new Button("Maiin");
 		button.setBackground(Color.WHITE);
 		
 		button.setBounds(764, 106, 105, 22);
@@ -106,14 +119,19 @@ public class UI{
 		Label label = new Label("Nama");
 		label.setBounds(689, 27, 62, 22);
 		layeredPane.add(label);		
-		Label label_1 = new Label("Alamat");
-		label_1.setBounds(689, 74, 62, 22);
+		Label label_1 = new Label("Nama room");
+		label_1.setBounds(689, 74, 69, 22);
 		layeredPane.add(label_1);
 		
 		lblGiiliran = DefaultComponentFactory.getInstance().createLabel("");
 		lblGiiliran.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblGiiliran.setBounds(689, 162, 257, 22);
+		lblGiiliran.setBounds(689, 221, 257, 22);
 		layeredPane.add(lblGiiliran);
+		
+		lblRoom = DefaultComponentFactory.getInstance().createLabel("");
+		lblRoom.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblRoom.setBounds(689, 170, 257, 22);
+		layeredPane.add(lblRoom);
 		listener = new ServerSocket(PORT);
 	}
 	
@@ -123,11 +141,13 @@ public class UI{
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				String name = textField.getText();
-				String addr = textField_1.getText();
+				String room = textField_1.getText();
 				if(name.compareTo("") != 0) {
-					game.addPlayer(name, addr);
+					game.addPlayer(name);
+					game.setRoomName(room);
 					textField.setText("");
 					textField_1.setText("");
+					lblRoom.setText("Room : "+room);
 					myID = game.getPalyers().size()-1;
 					if(game.getPalyers().size() == 1) {
 						lblGiiliran.setText("Giliran "+game.getPalyers().get(game.getTurn()).getName());
@@ -158,6 +178,4 @@ public class UI{
 		
 		layeredPane.add(layeredPane_1);
 	}
-
-	
 }
